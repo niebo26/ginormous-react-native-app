@@ -1,4 +1,4 @@
-package com.ginormous-react-native-app;
+package com.ginourmous.rn.app;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

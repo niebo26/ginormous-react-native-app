@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - test-mini
 jobs:
   test:
     timeout-minutes: 60
@@ -25,9 +26,13 @@ jobs:
         uses: android-actions/setup-android@v2
       - name: Build APK
         run: ./.github/workflows/scripts/setup-react-native-app.sh
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
       - name: Push APK update
         run: |
           git config --global user.email "bam.flashlight@gmail.com"
           git config --global user.name "flashlight-bot"
-          git add apks
+          mv android/pp/build/outputs/apk/release/app-release.apk release.apk
+          git add release.apk
+          git commit -m "add apk"
           git push
