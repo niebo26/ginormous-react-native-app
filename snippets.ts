@@ -124,36 +124,53 @@ const styles = StyleSheet.create({
 
 export default App;`;
 
-const generateFunctions = (count: number) => {
-  const filePath = './App.js';
+const FILE_COUNT = 1000;
+const METHOD_PER_FILE = 1000;
 
-  fs.writeFileSync(filePath, initial);
-
+const getFunctionName = (i: number) => {
   var base62 = require('base62/lib/custom');
-
   const prefix = '_';
 
   var charset =
     '9876543210ABCDEFGHIJKLMNOPQRSTUVWXYZ$abcdefghijklmnopqrstuvwxyz_';
   charset = base62.indexCharset(charset);
 
-  for (let i = 0; i <= count; i++) {
-    const functionName = `${prefix}${base62.encode(i, charset)}`;
+  return `${prefix}${base62.encode(i, charset)}`;
+};
+
+const generateFile = (fileIndex: number) => {
+  const filePath = `./src/App${fileIndex}.js`;
+
+  fs.writeFileSync(filePath, ``);
+
+  for (let i = 0; i <= METHOD_PER_FILE; i++) {
+    const functionName = getFunctionName(i);
     const functionCode = `${functionName}=function(o){console.log(o)};`;
 
     fs.appendFileSync(filePath, functionCode);
   }
 
   let globalFunctionCode = `
-const callAllConsoleLoggers = (a) => {`;
-  for (let i = 0; i <= count; i++) {
-    globalFunctionCode = globalFunctionCode.concat(
-      `${prefix}${base62.encode(i, charset)}(a);`,
-    );
+export const callAllConsoleLoggers = (a) => {`;
+  for (let i = 0; i <= METHOD_PER_FILE; i++) {
+    globalFunctionCode = globalFunctionCode.concat(`${getFunctionName(i)}(a);`);
   }
   globalFunctionCode = globalFunctionCode.concat(`}`);
 
   fs.appendFileSync(filePath, globalFunctionCode);
 };
 
-generateFunctions(300000);
+for (let i = 0; i <= FILE_COUNT; i++) {
+  generateFile(i);
+}
+
+fs.writeFileSync('./App.js', initial);
+
+fs.appendFileSync('./App.js', `function callAllConsoleLoggers(a) {`);
+for (let i = 0; i <= FILE_COUNT; i++) {
+  fs.appendFileSync(
+    './App.js',
+    `require("./src/App${i}.js").callAllConsoleLoggers(a);`,
+  );
+}
+fs.appendFileSync('./App.js', `}`);
