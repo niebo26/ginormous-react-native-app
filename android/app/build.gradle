@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.ginormous-react-native-app"
+    namespace "com.ginourmous.rn.app"
     defaultConfig {
-        applicationId "com.ginormous-react-native-app"
+        applicationId "com.ginourmous.rn.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

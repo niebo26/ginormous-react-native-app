@@ -1,4 +1,4 @@
-package com.ginormous-react-native-app;
+package com.ginourmous.rn.app;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
